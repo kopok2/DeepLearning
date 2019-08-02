@@ -58,3 +58,6 @@ if __name__ == "__main__":
     score = model.evaluate(X_test, Y_test, verbose=VERBOSE_SETTING)
     print("Model score:", score[0])
     print("Model accuracy:", score[1])
+
+    print("Saving model to json...")
+    open("mnist_model.json", "w").write(model.to_json())
