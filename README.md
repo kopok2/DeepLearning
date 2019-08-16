@@ -1,2 +1,2 @@
 # DeepLearning
- Deep learning various projects.
+ Deep learning projects.
