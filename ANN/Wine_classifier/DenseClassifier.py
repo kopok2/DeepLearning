@@ -8,7 +8,7 @@ from keras.optimizers import SGD, Adam, RMSprop
 
 class ANNClassifier:
     def __init__(self, input_shape, output_shape, architecture=[(3, 16)], EPOCHS=50, VERBOSE=2, OPTIMIZER=SGD,
-                 BATCH_SIZE=256, regularize=False, metrics=["accuracy"], loss="mean_squared_error"):
+                 BATCH_SIZE=256, regularize=False, metrics=["accuracy"], loss="categorical_crossentropy"):
         # Hyperparameters
         self.EPOCHS = EPOCHS
         self.VERBOSE = VERBOSE

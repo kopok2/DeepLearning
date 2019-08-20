@@ -48,6 +48,6 @@ if __name__ == "__main__":
 
     y_train = to_categorical(y_train)
     model = make_pipeline(StandardScaler(), PCA(n_components=6),
-                          ANNClassifier(6, 3, architecture=[(7, 4)], regularize=True, EPOCHS=1000))
+                          ANNClassifier(6, 3, architecture=[(2, 10)], regularize=True, EPOCHS=1000))
     model.fit(X_train, y_train)
     print(confusion_matrix(y_test, model.predict(X_test).argmax(axis=1)))
