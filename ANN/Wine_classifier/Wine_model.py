@@ -15,9 +15,12 @@ from sklearn.ensemble import ExtraTreesClassifier
 
 def eval_metric(confusion_mx):
     print(confusion_mx)
-    base = confusion_mx[0][1] + sum(confusion_mx[1])
+    ss = 0
+    for x in range(len(confusion_mx)):
+        ss += confusion_mx[x][x]
+    base = sum([sum(x) for x in confusion_mx])
     if base:
-        print("{0:.2f}%".format((confusion_mx[1][1] / base) * 100))
+        print("{0:.2f}%".format((ss / base) * 100))
     else:
         print("100.00%")
 
@@ -46,8 +49,12 @@ if __name__ == "__main__":
     print("Training")
     eval_metric(confusion_matrix(y_train, lgb_model.predict(X_train).round()))
 
+    yy = y_train
     y_train = to_categorical(y_train)
     model = make_pipeline(StandardScaler(), PCA(n_components=6),
                           ANNClassifier(6, 3, architecture=[(2, 10)], regularize=True, EPOCHS=1000))
     model.fit(X_train, y_train)
-    print(confusion_matrix(y_test, model.predict(X_test).argmax(axis=1)))
+    print("Test")
+    eval_metric(confusion_matrix(y_test, model.predict(X_test).argmax(axis=1)))
+    print("Training")
+    eval_metric(confusion_matrix(yy, model.predict(X_train).argmax(axis=1)))
