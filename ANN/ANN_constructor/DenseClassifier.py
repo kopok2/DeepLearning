@@ -27,7 +27,8 @@ class ANNClassifier:
         model.add(Activation("softmax"))
         self.model = model
         self.model.compile(optimizer=self.OPTIMIZER, loss=loss, metrics=metrics)
-        print(self.model.summary())
+        if VERBOSE:
+            print(self.model.summary())
 
     def fit(self, X, y):
         self.model.fit(X, y, batch_size=self.BATCH_SIZE, epochs=self.EPOCHS, verbose=self.VERBOSE, validation_split=0.2)

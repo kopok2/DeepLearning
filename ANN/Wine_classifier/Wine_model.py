@@ -11,6 +11,7 @@ from sklearn.pipeline import make_pipeline
 from sklearn.decomposition import PCA
 import lightgbm as lgb
 from sklearn.ensemble import ExtraTreesClassifier
+from DeepLearning.ANN.ANN_constructor.ANNArchitectureGridSearch import architecture_grid_search
 
 
 def eval_metric(confusion_mx):
@@ -28,6 +29,10 @@ def eval_metric(confusion_mx):
 if __name__ == "__main__":
     features, target = load_wine(return_X_y=True)
     X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=0.30)
+    # ann grid search
+    grid = architecture_grid_search(X_train, y_train, X_test, y_test)
+
+
     model = ExtraTreesClassifier(n_estimators=50, max_depth=None,
                          min_samples_split=2, criterion="gini")
     model = make_pipeline(StandardScaler(), PCA(n_components=6),
