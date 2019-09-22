@@ -61,18 +61,19 @@ def architecture_random_grid_search(X, y, X_val, y_val, iterations=50, max_depth
     return results
 
 
-def architecture_grid_search(X, y, X_val, y_val, max_depth=256,
-                             max_width=256, min_width=2, max_epochs=256):
+def architecture_grid_search(X, y, X_val, y_val, max_depth=40,
+                             max_width=40, min_width=2, max_epochs=256):
     results = []
-    for x in range(1, max_depth):
-        for yp in range(1, max_width):
-            for optimizer in [SGD, Adam, RMSprop]:
-                for regularize in [True, False]:
-                    for loss in ["categorical_crossentropy", "mean_squared_error",
-                "mean_absolute_error", "mean_squared_logarithmic_error"]:
+
+    for optimizer in [Adam, RMSprop, SGD]:
+        for regularize in [True, False]:
+            for loss in ["mean_squared_logarithmic_error", "categorical_crossentropy", "mean_squared_error",
+                         "mean_absolute_error"]:
+                for x in range(1, max_depth):
+                    for yp in range(1, max_width):
 
                         architecture = fixed_architecture(x, yp)
-                        epochs = (x ** 2 + yp ** 2) ** 2
+                        epochs = (x + yp) * 2
                         model = ANNClassifier(X.shape[1], len(np.unique(y)),
                                               architecture=architecture,
                                               VERBOSE=0, OPTIMIZER=optimizer,
@@ -80,8 +81,9 @@ def architecture_grid_search(X, y, X_val, y_val, max_depth=256,
                         y_train = to_categorical(y)
                         model.fit(X, y_train)
                         result = confusion_metric(confusion_matrix(y_val, model.predict(X_val).argmax(axis=1)))
-                        print(result, architecture, optimizer, regularize, epochs, loss)
-                        results.append((result, architecture, optimizer, regularize, epochs, loss))
+                        train_result = confusion_metric(confusion_matrix(y, model.predict(X).argmax(axis=1)))
+                        print(result, train_result, architecture, optimizer, regularize, epochs, loss)
+                        results.append((result, train_result, architecture, optimizer, regularize, epochs, loss))
     results.sort(key=itemgetter(0), reverse=True)
     for r in results:
         print(r)
